@@ -1,0 +1,171 @@
+/**
+ * File:    RotatingBuilding.cga
+ * Created: 20 Oct 2017 00:41:45 GMT
+ * Author:      Blake Harcourt - Blakeharcourt@hotmail.com
+ * Copyright:   (c) Blake Harcourt 2017
+ * Licence:     See attached License text file.
+ */
+
+ 
+
+version "2017.0"
+
+const Floor_Height = 3.5
+
+#Rotations
+attr Rotate_1 = 0
+attr Rotate_2 = 0
+attr Rotate_3 = 0
+attr Rotate_4 = 0
+attr Rotate_5 = 0
+
+#BASE ---------------------------------------------------------------------
+@Group("Base")
+@Color
+const Garden_Color = "#61a961"
+
+#ROOF ---------------------------------------------------------------------
+@Group("Roof")
+const Roof_Offset_Amount = 0.5
+const Roof_Border_Extrusion = 0.6
+const Roof_Extrusion = 0.3
+
+@Color
+const Roof_Color = "#C0C0C0"
+
+@Color
+const Roof_Border_Color = "#808080"
+
+#BUILDING ---------------------------------------------------------------------
+@Group("Building")
+@Color
+const Building_Trim_Color = "#C0C0C0"
+
+@Color
+const Building_Wall_Color = "#808080"
+
+@Color
+const Floor_Color = "#808080"
+
+#WINDOWS ---------------------------------------------------------------------
+@Group("Window")
+@Color
+const Glass_Color = "#0080C0"
+
+@Color
+const Glass_Border_Color = "#000000"
+
+#--------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------
+@StartRule
+Start-->
+	setback(5) { street.front : Garden | remainder : Building_Base }
+
+Garden -->
+	color(Garden_Color)
+
+Building_Base -->
+	offset(-3, inside)
+	extrude(world.up, Floor_Height)
+	comp(f){side:Building_Sides|top:Level_1|bottom:NIL}
+	
+#FLOORS -----------------------------------------------------------------------------
+Level_1 -->
+	Copy.									#This is needed to make a copy of the roof of the floor below
+	rotate(rel, object, 0, Rotate_1, 0)		#Sets the rotation of the level
+	center(xyz)								#Centers the rotations
+	extrude(world.up, Floor_Height)			#Extrudes the level
+	comp(f){side:Building_Sides|top:Level_2|bottom:Floor_Bottom}	#Create windows and repeat the process
+	 
+Level_2 -->
+	Copy.
+	rotate(rel, object, 0, Rotate_2, 0)
+	center(xyz)
+	extrude(world.up, Floor_Height)
+	comp(f){side:Building_Sides|top:Level_3|bottom:Floor_Bottom}	 
+	 
+Level_3 -->
+	Copy.
+	rotate(rel, object, 0, Rotate_3, 0)
+	center(xyz)
+	extrude(world.up, Floor_Height)
+	comp(f){side:Building_Sides|top:Level_4|bottom:Floor_Bottom}		 
+	 
+Level_4 -->
+	Copy.
+	rotate(rel, object, 0, Rotate_4, 0)
+	center(xyz)
+	extrude(world.up, Floor_Height)
+	comp(f){side:Building_Sides|top:Level_5|bottom:Floor_Bottom}	 
+	 
+Level_5 -->
+	Copy.
+	rotate(rel, object, 0, Rotate_5, 0)
+	center(xyz)
+	extrude(world.up, Floor_Height)
+	comp(f){side:Building_Sides|top:Roof|bottom:Floor_Bottom}	 
+
+Floor_Bottom -->
+	color(Floor_Color)
+
+#SIDES ------------------------------------------------------------------------------------
+Building_Sides -->
+	split(y){0.1:Building_Trim|~1:Inner_Building_Side|0.1:Building_Trim}	 
+	
+Inner_Building_Side -->
+	split(x){0.1:Building_Trim|~1:Inner_Windows|0.1:Building_Trim}
+ 
+Inner_Windows -->
+	split(x){~1:Window}*	 
+	 
+Window -->
+	split(y){~1:Wall_Color|2:Window_Top}	 
+
+Window_Top -->
+	offset(-0.05) Window_Top_Inside
+	
+Window_Top_Inside -->
+	comp(f) { inside: Window_Top_Inside_Extruded | border: Glass_Border }
+	
+Window_Top_Inside_Extruded -->	
+	extrude(-0.1)
+	comp(f){top:Glass|side:Glass_Border}
+	 
+Glass -->
+	color(Glass_Color)	 
+	 
+Glass_Border -->
+	color(Glass_Border_Color)	 	 
+	 
+Building_Trim -->
+	color(Building_Trim_Color)
+
+Wall_Color -->
+	color(Building_Wall_Color)
+		 
+# ROOF -------------------------------------------------------------------------------------
+Roof -->
+	offset(-Roof_Offset_Amount) 
+	Roof_Offset
+	
+Roof_Offset   --> 
+	comp(f) { inside: Inner_Roof | border: Border_Roof }
+	
+Border_Roof -->
+	extrude(Roof_Border_Extrusion)	 
+	color(Roof_Border_Color) 
+	 
+Inner_Roof -->
+	extrude(Roof_Extrusion)	 
+	color(Roof_Color) 
+	 
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 

@@ -1,0 +1,63 @@
+/**
+ * File:    Trees.cga
+ * Created: 23 Oct 2017 03:50:51 GMT
+ * Author:      Blake Harcourt - Blakeharcourt@hotmail.com
+ * Copyright:   (c) Blake Harcourt 2017
+ * Licence:     See attached License text file.
+ */
+
+version "2017.0"
+
+#The four different LODS for a tree
+@Group("Models")
+const Tree_0 = "models/Trees/Tree_A.obj"
+const Tree_1 = "models/Trees/Tree_B.obj"
+const Tree_2 = "models/Trees/Tree_C.obj"
+const Tree_3 = "models/Trees/Tree_D.obj"
+
+#The current LOD level of the tree
+@Group("LOD")
+@Range(0, 1, 2, 3)	#0 - highest \ 3 - lowest
+attr LOD_Level = 0
+
+#Random rotation and scale to make trees slightly unique
+@Group("Random Options")
+attr Rotation = rand(0, 360)	#Random rotation between 0 and 360
+attr Tree_Scale = rand(0.8, 1.5)	#Random scale between 80% and 150% of the original scale
+
+@StartRule
+Start -->
+	case LOD_Level == 0:
+		set(material.opacity, 1)		#Issue with the tree material I used  needs these set manually
+		set(material.reflectivity, 0)	#Issue with the tree material I used needs these set manually
+		r(0, Rotation, 0)				#Sets a random rotation that is constant throughout the LODs
+		s(0,0,0)								#Sets the tree to it's default scale
+		i(Tree_0)								#Inserts the tree model
+		s('Tree_Scale,'Tree_Scale,'Tree_Scale)	#Scales the tree randomly 
+		
+	case LOD_Level == 1:
+		set(material.opacity, 1)
+		set(material.reflectivity, 0)
+		r(0, Rotation, 0)
+		s(0,0,0)
+		i(Tree_1)
+		s('Tree_Scale,'Tree_Scale,'Tree_Scale)
+		
+	case LOD_Level == 2:
+		set(material.opacity, 1)
+		set(material.reflectivity, 0)
+		r(0, Rotation, 0)
+		s(0,0,0)
+		i(Tree_2)
+		s('Tree_Scale,'Tree_Scale,'Tree_Scale)
+		
+	case LOD_Level == 3:
+		set(material.opacity, 1)
+		set(material.reflectivity, 0)
+		r(0, Rotation, 0)
+		s(0,0,0)
+		i(Tree_3)
+		s('Tree_Scale,'Tree_Scale,'Tree_Scale)
+
+	else:
+		print("LOD ERROR")

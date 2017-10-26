@@ -1,0 +1,15 @@
+/**
+ * File:    Text.cga
+ * Created: 26 Oct 2017 07:47:42 GMT
+ * Author:  Blake Harcourt
+ */
+
+version "2017.0"
+
+@Color
+attr Text_Color = "#FF0000"
+
+@StartRule
+Start -->
+	extrude(2)
+	color(Text_Color)
